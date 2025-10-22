@@ -71,7 +71,7 @@ namespace Projekat_B_isTovar.Views
             }
         }
 
-        private (int UserId, int Role)? GetUserFromDatabase(string username, string password)
+        /*private (int UserId, int Role)? GetUserFromDatabase(string username, string password)
         {
             using (var conn = Database.GetConnection())
             {
@@ -90,9 +90,9 @@ namespace Projekat_B_isTovar.Views
                 }
             }
             return null;
-        }
+        }*/
 
-        /*private (int UserId, int Role)? GetUserFromDatabase(string username, string password)
+        private (int UserId, int Role)? GetUserFromDatabase(string username, string password)
         {
             using (var conn = Database.GetConnection())
             {
@@ -109,8 +109,7 @@ namespace Projekat_B_isTovar.Views
                         int role = reader.GetInt32("uloga");
                         string storedHash = reader.GetString("lozinka");
 
-                        // Heširaj unesenu lozinku i usporedi s pohranjenim hešom
-                        string inputHash = HashPasswordSHA256(password);
+                        string inputHash = HashPassword.HashSHA256(password);
                         if (inputHash == storedHash)
                         {
                             return (userId, role);
@@ -119,21 +118,6 @@ namespace Projekat_B_isTovar.Views
                 }
             }
             return null;
-        }*/
-
-        private string HashPasswordSHA256(string password)
-        {
-            using (SHA256 sha256 = SHA256.Create())
-            {
-                byte[] bytes = Encoding.UTF8.GetBytes(password);
-                byte[] hash = sha256.ComputeHash(bytes);
-                StringBuilder builder = new StringBuilder();
-                foreach (byte b in hash)
-                {
-                    builder.Append(b.ToString("x2")); // x2 formatira bajt kao dva heksadecimalna znaka
-                }
-                return builder.ToString();
-            }
         }
 
         private void OpenRegister_Click(object sender, RoutedEventArgs e)

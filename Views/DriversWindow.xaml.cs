@@ -11,6 +11,7 @@ namespace Projekat_B_isTovar.Views
     public partial class DriversWindow : Window
     {
         public ObservableCollection<Driver> Drivers { get; set; } = new();
+        public ObservableCollection<Truck> Trucks { get; set; } = new();
         private Driver selectedDriver;
 
         private UserSettings settings;
@@ -28,6 +29,7 @@ namespace Projekat_B_isTovar.Views
             ApplyManager.ApplyLanguage(settings.Language, loc);
 
             LoadDriversFromDatabase();
+            LoadTrucksFromDatabase();
             DriversDataGrid.ItemsSource = Drivers;
         }
 
@@ -79,6 +81,46 @@ namespace Projekat_B_isTovar.Views
             }
         }
 
+        private void LoadTrucksFromDatabase()
+        {
+            Trucks.Clear();
+            try
+            {
+                using (var conn = Database.GetConnection())
+                {
+                    conn.Open();
+                    string sql = @"
+                        SELECT idKamiona, tip, marka, konjskeSnage, idPrikolice, vrstaGoriva, 
+                               godinaProizvodnje, registarskaOznaka, kilometraza
+                        FROM kamion";  // Pretpostavljam ime tablice 'kamion'
+
+                    using (var cmd = new MySqlCommand(sql, conn))
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Trucks.Add(new Truck
+                            {
+                                IdKamiona = reader.GetInt32("idKamiona"),
+                                Tip = reader.GetString("tip"),
+                                Brend = reader.GetString("marka"),  
+                                KonjskeSnage = reader.GetInt32("konjskeSnage"),
+                                IdPrikolice = reader["idPrikolice"] != DBNull.Value ? reader.GetInt32("idPrikolice") : (int?)null,
+                                Gorivo = reader.GetString("vrstaGoriva"),
+                                GodinaProizvodnje = reader.GetInt32("godinaProizvodnje"),
+                                RegistarskaOznaka = reader.GetString("registarskaOznaka"),
+                                Kilometraza = reader.GetInt32("kilometraza")
+                            });
+                        }
+                    }
+                }
+            }
+            catch (MySqlException ex)
+            {
+                MessageBox.Show($"{Strings.TruckLoadError}: {ex.Message}");
+            }
+        }
+
         private void EditDriver_Click(object sender, RoutedEventArgs e)
         {
             selectedDriver = DriversDataGrid.SelectedItem as Driver;
@@ -96,6 +138,9 @@ namespace Projekat_B_isTovar.Views
             editLicenseNo.Text = selectedDriver.BrojDozvole;
             editLicense.Text = selectedDriver.Licenca;
 
+            editTruckId.ItemsSource = Trucks;
+            editTruckId.SelectedValue = selectedDriver.IdKamiona;
+
             EditPanel.Visibility = Visibility.Visible;
             ActionButtonsPanel.Visibility = Visibility.Collapsed;
         }
@@ -109,7 +154,8 @@ namespace Projekat_B_isTovar.Views
                                JOIN vozac v ON k.idKorisnika = v.idKorisnika
                                SET k.korisnickoIme=@username, k.ime=@ime, k.prezime=@prezime, 
                                    k.email=@email, k.brojTelefona=@telefon,
-                                   v.brojDozvole=@dozvola, v.licenca=@licenca
+                                   v.brojDozvole=@dozvola, v.licenca=@licenca,
+                                   v.idKamiona=@idKamiona 
                                WHERE k.idKorisnika=@id";
 
                 using (var cmd = new MySqlCommand(sql, conn))
@@ -122,6 +168,9 @@ namespace Projekat_B_isTovar.Views
                     cmd.Parameters.AddWithValue("@dozvola", editLicenseNo.Text);
                     cmd.Parameters.AddWithValue("@licenca", editLicense.Text);
                     cmd.Parameters.AddWithValue("@id", selectedDriver.IdKorisnika);
+
+                    var selectedTruckId = editTruckId.SelectedValue;
+                    cmd.Parameters.AddWithValue("@idKamiona", selectedTruckId ?? DBNull.Value);
 
                     cmd.ExecuteNonQuery();
                 }

@@ -53,7 +53,7 @@
 
         <StackPanel x:Name="ActionButtonsPanel" Orientation="Horizontal" Grid.Row="2" Margin="10,5"
             Visibility="{Binding IsVisible, ElementName=EditPanel, Converter={StaticResource InverseBoolToVisConverter}}">
-        <Button Content="{Binding Source={StaticResource Strings}, Path=EditButton}"
+            <Button Content="{Binding Source={StaticResource Strings}, Path=EditButton}"
                     Width="100" Margin="5"
                     Background="{DynamicResource PrimaryColor}"
                     Click="EditDriver_Click"/>
@@ -94,8 +94,13 @@
                 <TextBox x:Name="editLicense"
                          materialDesign:HintAssist.Hint="{Binding Source={StaticResource Strings}, Path=ColumnLicense}"
                          Foreground="{DynamicResource PrimaryColor}" Margin="0,5"/>
+                <ComboBox x:Name="editTruckId"
+                          materialDesign:HintAssist.Hint="{Binding Source={StaticResource Strings}, Path=ColumnTruckId}"
+                          DisplayMemberPath="DisplayName" 
+                    SelectedValuePath="IdKamiona"
+                          Foreground="{DynamicResource PrimaryColor}" Margin="0,5"/>
 
-                <Button Content="{Binding Source={StaticResource Strings}, Path=SaveButton}"
+                    <Button Content="{Binding Source={StaticResource Strings}, Path=SaveButton}"
                         Width="120" Height="30"
                         Margin="0,15,0,0"
                         HorizontalAlignment="Left"

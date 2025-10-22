@@ -72,11 +72,11 @@ namespace Projekat_B_isTovar.Views
             {
                 conn.Open();
 
-                //string hashedPassword = HashPasswordSHA256(password);
+                string hashedPassword = HashPassword.HashSHA256(password);
 
 
                 //Ovdje ubaciti hashedPassword umjesto password u InsertKorisnik
-                long idKorisnika = InsertKorisnik(conn, username, ime, prezime, email, password, telefon, role);
+                long idKorisnika = InsertKorisnik(conn, username, ime, prezime, email, hashedPassword, telefon, role);
 
                 if (role == 0)
                 {
@@ -124,21 +124,6 @@ namespace Projekat_B_isTovar.Views
             cmd.Parameters.AddWithValue("@dozvola", brojDozvole);
             cmd.Parameters.AddWithValue("@licenca", licenca);
             cmd.ExecuteNonQuery();
-        }
-
-        private string HashPasswordSHA256(string password)
-        {
-            using (SHA256 sha256 = SHA256.Create())
-            {
-                byte[] bytes = Encoding.UTF8.GetBytes(password);
-                byte[] hash = sha256.ComputeHash(bytes);
-                StringBuilder builder = new StringBuilder();
-                foreach (byte b in hash)
-                {
-                    builder.Append(b.ToString("x2")); // x2 formatira bajt kao dva heksadecimalna znaka
-                }
-                return builder.ToString();
-            }
         }
     }
 }

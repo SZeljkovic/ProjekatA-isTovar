@@ -9,7 +9,7 @@ Sistem isTovar predstavlja softversko rješenje namijenjeno transportnim firmama
 Sistem podržava dva tipa korisnika:
 
 - Vozač - Zadužen za izvršavanje tura. Ima dodijeljen kamion i prikolicu, te može prijavljivati probleme i ostavljati komentare. Karakterišu ga i broj dozvole, vrsta licence kao i trenutna dostupnost.
-- Dispečer - Zadužen za dodjeljivanje tura vozačima i praćenje njihovog statusa.
+- Dispečer - Zadužen za dodjeljivanje tura vozačima i praćenje njihovog statusa, kao i za generalno upravljanje procesima u sistemu, uključujući kamione, prikolice, firme adrese i dr.
 
 Svaki korisnik ima osnovne podatke (ime, prezime, korisničko ime, lozinka, uloga, mejl i broj telefona), dok su vozači i dispečeri dodatno imaju specifične podatke.
 

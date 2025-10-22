@@ -25,6 +25,9 @@ namespace Projekat_B_isTovar.Models
         public string RegistarskaOznaka { get; set; }
 
         public int Kilometraza { get; set; }
+		
+		public string DisplayName => $"{IdKamiona} - {Brend} - {Tip} ({GodinaProizvodnje})";
+
 
     }
 }

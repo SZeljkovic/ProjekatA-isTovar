@@ -13,8 +13,11 @@ namespace Projekat_B_isTovar.Resources
         public string Email => Strings.Email;
         public string Password => Strings.Password;
         public string Phone => Strings.Phone;
-        public string Status => Strings.Status; // Status dispečera
+        public string Status => Strings.Status;
         public string SaveButton => Strings.SaveButton;
+
+        public string Available => Strings.Available;
+        public string Unavailable => Strings.Unavailable;
 
         public void Refresh()
         {
